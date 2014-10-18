@@ -1,4 +1,4 @@
-package moppydesk;
+package moppydesk.outputs;
 
 import gnu.io.SerialPort;
 import javax.sound.midi.MidiMessage;
@@ -8,7 +8,7 @@ import javax.sound.midi.Receiver;
  *
  * @author Sammy1Am
  */
-public class MoppyPlayer implements Receiver {
+public class MoppyPlayerOutput implements MoppyReceiver {
 
     /**
      * The periods for each MIDI note in an array.  The floppy drives
@@ -40,15 +40,16 @@ public class MoppyPlayer implements Receiver {
      */
     private int[] currentPeriod = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     
-    MoppyBridge mb;
+    MoppyCOMBridge mb;
     SerialPort com;
 
-    public MoppyPlayer(MoppyBridge newMb) {
+    public MoppyPlayerOutput(MoppyCOMBridge newMb) {
         mb = newMb;
     }
 
     public void close() {
-        mb.close();
+            mb.resetDrives();
+            mb.close();
     }
 
     //Is called by Java MIDI libraries for each MIDI message encountered.
@@ -102,5 +103,9 @@ public class MoppyPlayer implements Receiver {
             }
         }
 
+    }
+
+    public void reset() {
+        mb.resetDrives();
     }
 }
